@@ -1,0 +1,9 @@
+AddonId: Project_Trixie_Dark_Fullscreen_1d812c20-16a0-4cae-8a4e-930e98e0d740
+Packages:
+- Version: 1.0.0
+  RequiredApiVersion: 2.10.0
+  ReleaseDate: '2026-11-17'
+  PackageUrl: https://github.com/NEGAARMAX/Project-Trixie---WiiNite/releases/download/v1.0.0/Trixie_Fullscreen_Dark_v1.0.0_BYOA.pthm
+  Changelog:
+  - Initial public release of Project Trixie — WiiNite.
+  - Wii-inspired interface and BYOA customization.
