@@ -147,7 +147,7 @@ Project Trixie — WiiNite is an **unofficial fan project**, not affiliated with
 
 Take a look at Project Trixie — WiiNite in action!
 
-[![Project Trixie — WiiNite Showcase](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=zDSUBqLgC10)
+[![Project Trixie — WiiNite Showcase](https://img.youtube.com/vi/zDSUBqLgC10/maxresdefault.jpg)](https://www.youtube.com/watch?v=zDSUBqLgC10)
 
 *Experience the magic of the Great and Powerful Trixie!*
 
