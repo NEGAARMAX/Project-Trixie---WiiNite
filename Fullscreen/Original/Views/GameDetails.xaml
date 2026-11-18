@@ -1,0 +1,273 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Style TargetType="{x:Type GameDetails}"><Setter Property="Template"><Setter.Value>
+<ControlTemplate TargetType="{x:Type GameDetails}">
+<Grid x:Name="PART_ViewHost" Background="#F8FAFC" KeyboardNavigation.DirectionalNavigation="Cycle" KeyboardNavigation.TabNavigation="Cycle" KeyboardNavigation.ControlTabNavigation="Cycle"><Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="180"/></Grid.RowDefinitions>
+<!-- 0.7.06: diagnostico de IsVisible del contenedor, sin evento Loaded. -->
+<Grid x:Name="TrixieChannelView" Grid.Row="0" Background="#000000">
+<!-- 0.6.04: el fallback original permanece si no hay video o el reproductor esta deshabilitado. -->
+<Grid x:Name="TrixieChannelArtwork" IsHitTestVisible="False" Focusable="False">
+<FadeImage x:Name="PART_ImageBackground" Stretch="UniformToFill"/>
+<Border Background="#55000000"/>
+<!-- Logo de Extra Metadata Loader; si no existe, mostrar nombre del juego -->
+<!-- Area de logo a la izquierda: 600 x 350, centrada verticalmente en la zona visual.
+     Viewbox escala el contenido real de Extra Metadata Loader conservando proporciones. -->
+<Viewbox Width="600" Height="350" Stretch="Uniform" StretchDirection="Both"
+         HorizontalAlignment="Left" VerticalAlignment="Center" Margin="65,0,0,0"
+         IsHitTestVisible="False" Focusable="False">
+    <ContentControl x:Name="ExtraMetadataLoader_LogoLoaderControl"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    IsTabStop="False" Focusable="False"/>
+</Viewbox>
+<TextBlock x:Name="TrixieGameTitleFallback" Text="{Binding DisplayName}"
+           Foreground="White" FontSize="46" FontWeight="SemiBold"
+           TextWrapping="Wrap" Width="600" TextAlignment="Center"
+           HorizontalAlignment="Left" VerticalAlignment="Center" Margin="65,0,0,0"/>
+</Grid>
+<!-- Video sin controles ni foco; debajo de las flechas y la barra de acciones. -->
+<Grid x:Name="TrixieChannelVideo" Visibility="Collapsed" Background="#000000" Focusable="False" IsHitTestVisible="False" ClipToBounds="True">
+  <ContentControl x:Name="ExtraMetadataLoader_VideoLoaderControl_NoControls_Sound"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                  Focusable="False" IsTabStop="False"/>
+</Grid>
+<!-- 0.7.07: diagnostico de cambio de SelectedGame.Id mediante Binding.TargetUpdated.
+     No se modifica la navegacion. El evento puede dispararse al inicializar el enlace. -->
+<Border x:Name="TrixieSelectedGameChangeProbe" Width="0" Height="0"
+        IsHitTestVisible="False" Focusable="False"
+        Tag="{Binding DataContext.SelectedGame.Id, RelativeSource={RelativeSource AncestorType={x:Type Main}}, NotifyOnTargetUpdated=True}">
+  <Border.Triggers>
+    <EventTrigger RoutedEvent="Binding.TargetUpdated">
+      <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+        <Storyboard>
+          <MediaTimeline Source="{ThemeFile 'audio/_channel-change.wav'}"
+                         Storyboard.TargetName="TrixieChannelChangeSound"/>
+        </Storyboard>
+      </BeginStoryboard>
+    </EventTrigger>
+  </Border.Triggers>
+</Border>
+<MediaElement x:Name="TrixieChannelChangeSound" LoadedBehavior="Manual" UnloadedBehavior="Close"
+              Volume="{Settings Fullscreen.InterfaceVolume}" Width="0" Height="0"
+              IsHitTestVisible="False" Focusable="False">
+  <MediaElement.Style>
+    <Style TargetType="{x:Type MediaElement}">
+      <Setter Property="IsMuted" Value="False"/>
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding IsVisible, RelativeSource={RelativeSource AncestorType={x:Type GameDetails}}}" Value="False">
+          <Setter Property="IsMuted" Value="True"/>
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </MediaElement.Style>
+</MediaElement>
+<!-- 0.7.06: reproductor manual controlado por IsVisible del host. -->
+<MediaElement x:Name="TrixieChannelOpeningSound" LoadedBehavior="Manual" UnloadedBehavior="Close"
+              Volume="{Settings Fullscreen.InterfaceVolume}" Width="0" Height="0" IsHitTestVisible="False" Focusable="False" />
+</Grid>
+
+<Grid x:Name="TrixieDetailsView" Grid.Row="0" Visibility="Collapsed" Background="#334E62">
+  <FadeImage Stretch="UniformToFill" Source="{Binding DisplayBackgroundImage}"/>
+  <Border Background="#A8000000"/>
+  <Grid Margin="36,30,36,20" ClipToBounds="True">
+    <Grid.ColumnDefinitions><ColumnDefinition Width="25*"/><ColumnDefinition Width="25*"/><ColumnDefinition Width="50*"/></Grid.ColumnDefinitions>
+    <!-- Recuperar el host de LibraryManagement en su contenedor funcional original. -->
+    <Grid Grid.Column="0" Margin="0,0,30,0" ClipToBounds="True">
+      <Image Source="{Binding CoverImageObject}" Stretch="Uniform" VerticalAlignment="Top" HorizontalAlignment="Left" MaxHeight="560"/>
+    </Grid>
+    <!-- Prueba 0.5.12: mismo ContentControl funcional, ancho de dos columnas. Sin ScrollViewer envolvente. -->
+    <ContentControl x:Name="LibraryManagement_PluginFeaturesIconList" Grid.Column="0" Grid.ColumnSpan="2" Height="52" Margin="0,0,24,0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsTabStop="False" Focusable="False" IsEnabled="False" Panel.ZIndex="2"/>
+    <ScrollViewer Grid.Column="1" Margin="0,0,24,70" VerticalScrollBarVisibility="Auto" Focusable="False" IsTabStop="False">
+      <StackPanel TextBlock.Foreground="White" TextBlock.FontSize="19">
+        <TextBlock Text="Tiempo jugado" FontWeight="SemiBold" Margin="0,0,0,3"/>
+        <TextBlock Text="{Binding Playtime, Converter={StaticResource PlayTimeToStringConverter}}" Margin="0,0,0,18" TextWrapping="Wrap"/>
+        <TextBlock Text="Actividad reciente" FontWeight="SemiBold" Margin="0,0,0,3"/>
+        <TextBlock Text="{Binding LastActivity, Converter={StaticResource DateTimeToLastPlayedConverter}}" Margin="0,0,0,18" TextWrapping="Wrap"/>
+        <TextBlock Text="Plataforma" FontWeight="SemiBold" Margin="0,0,0,3"/>
+        <TextBlock Text="{Binding Platforms, Converter={StaticResource ListToStringConverter}}" Margin="0,0,0,18" TextWrapping="Wrap"/>
+        <TextBlock Text="Géneros" FontWeight="SemiBold" Margin="0,0,0,3"/>
+        <TextBlock Text="{Binding Genres, Converter={StaticResource ListToStringConverter}}" Margin="0,0,0,18" TextWrapping="Wrap"/>
+        <TextBlock Text="Desarrollador" FontWeight="SemiBold" Margin="0,0,0,3"/>
+        <TextBlock Text="{Binding Developers, Converter={StaticResource ListToStringConverter}}" Margin="0,0,0,18" TextWrapping="Wrap"/>
+        <TextBlock Text="Editor" FontWeight="SemiBold" Margin="0,0,0,3"/>
+        <TextBlock Text="{Binding Publishers, Converter={StaticResource ListToStringConverter}}" Margin="0,0,0,18" TextWrapping="Wrap"/>
+        <TextBlock Text="Características" FontWeight="SemiBold" Margin="0,0,0,3"/>
+        <TextBlock Text="{Binding Features, Converter={StaticResource ListToStringConverter}}" TextWrapping="Wrap"/>
+      </StackPanel>
+    </ScrollViewer>
+    <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False" IsTabStop="False">
+      <ScrollViewer.Resources>
+        <Style TargetType="{x:Type ScrollBar}">
+          <Setter Property="Width" Value="14"/>
+          <Setter Property="Foreground" Value="#36BCE8"/>
+          <Setter Property="Background" Value="#E9F5FA"/>
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="{x:Type ScrollBar}">
+                <Grid Background="Transparent">
+                  <Border Background="#E9F5FA" CornerRadius="7" Margin="3,0"/>
+                  <Track x:Name="PART_Track" IsDirectionReversed="True" Focusable="False">
+                    <Track.DecreaseRepeatButton><RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/></Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                      <Thumb Background="#36BCE8" BorderBrush="#159ECF" BorderThickness="1" Focusable="False">
+                        <Thumb.Template><ControlTemplate TargetType="{x:Type Thumb}"><Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Margin="2,0"/></ControlTemplate></Thumb.Template>
+                      </Thumb>
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton><RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/></Track.IncreaseRepeatButton>
+                  </Track>
+                </Grid>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
+      </ScrollViewer.Resources>
+      <StackPanel>
+        <TextBlock Text="{Binding DisplayName}" Foreground="White" FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,14"/>
+        <!-- Control HTML nativo de Playnite: respeta la descripcion enriquecida. -->
+        <HtmlTextView x:Name="PART_HtmlDescription" HtmlFontSize="21" HtmlForeground="White" HtmlFontFamily="Segoe UI" Focusable="False" IsTabStop="False"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Grid>
+<!-- 0.6.02: botones circulares Wii; solo cambios visuales. -->
+<Grid Grid.Row="0" Panel.ZIndex="20" IsHitTestVisible="True" Focusable="False" KeyboardNavigation.IsTabStop="False">
+  <Button x:Name="TrixiePrevChannel" Width="76" Height="76" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="12,0,0,0"
+          Focusable="False" IsTabStop="False" FocusVisualStyle="{x:Null}" Cursor="Hand"
+          Command="{Binding DataContext.SelectPrevGameCommand, RelativeSource={RelativeSource AncestorType={x:Type Main}}}"
+          ><Button.ToolTip><ToolTip Background="#F7F9FA" Foreground="#365B6F" BorderBrush="#20B9F2" BorderThickness="1.5" Padding="10,6" FontSize="16" FontFamily="Segoe UI"><TextBlock Foreground="#365B6F" Text="Juego anterior (F2 / LB)"/></ToolTip></Button.ToolTip>
+    <Button.Template>
+      <ControlTemplate TargetType="{x:Type Button}">
+        <Border x:Name="TrixiePrevSurface" Background="#00FFFFFF" BorderBrush="Transparent" BorderThickness="2.5" CornerRadius="38">
+          <Grid>
+            <Path x:Name="TrixiePrevArrow" Data="M 46,17 L 25,38 L 46,59 Z" Fill="#77D9F8" Stroke="#245E7A" StrokeThickness="2"/>
+            <TextBlock x:Name="TrixiePrevMinus" Text="&#x2212;" FontSize="49" FontWeight="Light" Foreground="#92999E" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"><TextBlock.RenderTransform><TranslateTransform Y="-3"/></TextBlock.RenderTransform></TextBlock>
+          </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True">
+            <Setter TargetName="TrixiePrevSurface" Property="Background" Value="#F7F9FA"/>
+            <Setter TargetName="TrixiePrevSurface" Property="BorderBrush" Value="#20B9F2"/>
+            <Setter TargetName="TrixiePrevArrow" Property="Visibility" Value="Collapsed"/>
+            <Setter TargetName="TrixiePrevMinus" Property="Visibility" Value="Visible"/>
+          </Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </Button.Template>
+  </Button>
+  <Button x:Name="TrixieNextChannel" Width="76" Height="76" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0"
+          Focusable="False" IsTabStop="False" FocusVisualStyle="{x:Null}" Cursor="Hand"
+          Command="{Binding DataContext.SelectNextGameCommand, RelativeSource={RelativeSource AncestorType={x:Type Main}}}"
+          ><Button.ToolTip><ToolTip Background="#F7F9FA" Foreground="#365B6F" BorderBrush="#20B9F2" BorderThickness="1.5" Padding="10,6" FontSize="16" FontFamily="Segoe UI"><TextBlock Foreground="#365B6F" Text="Juego siguiente (F3 / RB)"/></ToolTip></Button.ToolTip>
+    <Button.Template>
+      <ControlTemplate TargetType="{x:Type Button}">
+        <Border x:Name="TrixieNextSurface" Background="#00FFFFFF" BorderBrush="Transparent" BorderThickness="2.5" CornerRadius="38">
+          <Grid>
+            <Path x:Name="TrixieNextArrow" Data="M 30,17 L 51,38 L 30,59 Z" Fill="#77D9F8" Stroke="#245E7A" StrokeThickness="2"/>
+            <TextBlock x:Name="TrixieNextPlus" Text="+" FontSize="49" FontWeight="Light" Foreground="#92999E" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"><TextBlock.RenderTransform><TranslateTransform Y="-3"/></TextBlock.RenderTransform></TextBlock>
+          </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True">
+            <Setter TargetName="TrixieNextSurface" Property="Background" Value="#F7F9FA"/>
+            <Setter TargetName="TrixieNextSurface" Property="BorderBrush" Value="#20B9F2"/>
+            <Setter TargetName="TrixieNextArrow" Property="Visibility" Value="Collapsed"/>
+            <Setter TargetName="TrixieNextPlus" Property="Visibility" Value="Visible"/>
+          </Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </Button.Template>
+  </Button>
+</Grid>
+<Grid Grid.Row="1" Background="#E3E8EE">
+  <!-- 0.6.00: barra de botones compacta y centrada, sin cambiar comandos -->
+  <Grid Width="1320" MaxWidth="1320" HorizontalAlignment="Center" VerticalAlignment="Center">
+  <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+  <ButtonEx x:Name="PART_ButtonContext" Grid.Column="0" FontSize="24" Foreground="#285B75" Background="#EAF4FA" BorderBrush="#43BFEF" BorderThickness="3" Margin="8" Height="112">
+    <!-- El contenido del boton lo administra Playnite. El icono vive en la plantilla. -->
+    <ButtonEx.Template>
+      <ControlTemplate TargetType="{x:Type ButtonEx}">
+        <Border x:Name="TrixieStartBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="48">
+          <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Width="29" Height="29" HorizontalAlignment="Center" Margin="0,0,0,8">
+              <Ellipse Width="25" Height="25" Stroke="{TemplateBinding Foreground}" StrokeThickness="2.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              <Path Data="M 11,7 L 21,14.5 L 11,22 Z" Fill="{TemplateBinding Foreground}" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Grid>
+            <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}"/>
+          </StackPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="TrixieStartBorder" Property="BorderBrush" Value="#17A9EA"/><Setter TargetName="TrixieStartBorder" Property="BorderThickness" Value="4"/><Setter TargetName="TrixieStartBorder" Property="Background" Value="#DDF3FC"/></Trigger>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TrixieStartBorder" Property="Background" Value="#DDF3FC"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </ButtonEx.Template>
+  </ButtonEx>
+  <ButtonEx x:Name="PART_ButtonBack" Grid.Column="1" Command="{Binding DataContext.ToggleGameDetailsCommand, RelativeSource={RelativeSource AncestorType={x:Type Main}}}" FontSize="24" Foreground="#285B75" Background="#EAF4FA" BorderBrush="#43BFEF" BorderThickness="3" Margin="8" Height="112">
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+      <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="27" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+      <TextBlock Text="Menú de WiiNite" HorizontalAlignment="Center"/>
+    </StackPanel>
+    <ButtonEx.Template>
+      <ControlTemplate TargetType="{x:Type ButtonEx}">
+        <Border x:Name="TrixieBackBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="48">
+          <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="TrixieBackBorder" Property="BorderBrush" Value="#17A9EA"/><Setter TargetName="TrixieBackBorder" Property="BorderThickness" Value="4"/><Setter TargetName="TrixieBackBorder" Property="Background" Value="#DDF3FC"/></Trigger>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TrixieBackBorder" Property="Background" Value="#DDF3FC"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </ButtonEx.Template>
+  </ButtonEx>
+  <ToggleButtonEx x:Name="TrixieDetailsToggle" Grid.Column="2" FontSize="24" Foreground="#285B75" Background="#EAF4FA" BorderBrush="#43BFEF" BorderThickness="3" Margin="8" Height="112" FocusVisualStyle="{x:Null}">
+    <ToggleButtonEx.Template>
+      <ControlTemplate TargetType="{x:Type ToggleButtonEx}">
+        <Border x:Name="TrixieToggleBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="48">
+          <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Width="29" Height="27" HorizontalAlignment="Center" Margin="0,0,0,8">
+              <TextBlock x:Name="TrixieToggleIcon" Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="27" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center"/>
+              <Path x:Name="TrixieMonitorIcon" Visibility="Collapsed" Data="M 2,3 L 22,3 L 22,17 L 2,17 Z M 12,17 L 12,21 M 7,21 L 17,21" Stroke="{TemplateBinding Foreground}" StrokeThickness="2.2" StrokeLineJoin="Round" Stretch="Uniform" Width="27" Height="27"/>
+            </Grid>
+            <TextBlock x:Name="TrixieToggleLabel" Text="Detalles" FontSize="24" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsChecked" Value="True"><Setter TargetName="TrixieToggleIcon" Property="Visibility" Value="Collapsed"/><Setter TargetName="TrixieMonitorIcon" Property="Visibility" Value="Visible"/><Setter TargetName="TrixieToggleLabel" Property="Text" Value="Canal"/></Trigger>
+          <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="TrixieToggleBorder" Property="BorderBrush" Value="#17A9EA"/><Setter TargetName="TrixieToggleBorder" Property="BorderThickness" Value="4"/><Setter TargetName="TrixieToggleBorder" Property="Background" Value="#DDF3FC"/></Trigger>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TrixieToggleBorder" Property="Background" Value="#DDF3FC"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </ToggleButtonEx.Template>
+  </ToggleButtonEx>
+</Grid></Grid></Grid>
+<ControlTemplate.Triggers>
+<!-- 0.7.06: reproduce al hacerse visible el host; comprueba si Playnite cambia IsVisible en cada entrada. -->
+<Trigger SourceName="PART_ViewHost" Property="IsVisible" Value="True">
+  <Trigger.EnterActions>
+    <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+      <Storyboard>
+        <MediaTimeline Source="{ThemeFile 'audio/_channel-in.wav'}"
+                       Storyboard.TargetName="TrixieChannelOpeningSound" />
+      </Storyboard>
+    </BeginStoryboard>
+  </Trigger.EnterActions>
+</Trigger>
+<!-- Solo activar el video cuando existe contenido y el reproductor esta habilitado. -->
+<MultiDataTrigger>
+  <MultiDataTrigger.Conditions>
+    <Condition Binding="{PluginSettings Plugin=ExtraMetadataLoader, Path=IsAnyVideoAvailable, FallbackValue=False}" Value="True"/>
+    <Condition Binding="{PluginSettings Plugin=ExtraMetadataLoader, Path=EnableVideoPlayer, FallbackValue=False}" Value="True"/>
+  </MultiDataTrigger.Conditions>
+  <Setter TargetName="TrixieChannelArtwork" Property="Visibility" Value="Collapsed"/>
+  <Setter TargetName="TrixieChannelVideo" Property="Visibility" Value="Visible"/>
+</MultiDataTrigger>
+<DataTrigger Binding="{PluginSettings Plugin=ExtraMetadataLoader, Path=IsLogoAvailable}" Value="True">
+<Setter TargetName="TrixieGameTitleFallback" Property="Visibility" Value="Collapsed"/>
+</DataTrigger>
+<Trigger SourceName="TrixieDetailsToggle" Property="IsChecked" Value="True">
+<Setter TargetName="TrixieChannelView" Property="Visibility" Value="Collapsed"/>
+<Setter TargetName="TrixieDetailsView" Property="Visibility" Value="Visible"/>
+</Trigger>
+</ControlTemplate.Triggers>
+</ControlTemplate></Setter.Value></Setter></Style></ResourceDictionary>

@@ -1,0 +1,94 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d">
+    <Style x:Key="ListGameItemTemplate" TargetType="{x:Type GameListItem}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GameListItem}">
+                    <Grid x:Name="ChannelHost" ClipToBounds="False">
+                        <!-- Rounded alpha mask applies to the whole channel, not the outer focus border. -->
+                        <Grid.OpacityMask>
+                            <VisualBrush Stretch="Fill">
+                                <VisualBrush.Visual>
+                                    <Border Width="160" Height="90" CornerRadius="5" Background="White" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Grid.OpacityMask>
+                        <!-- Original Playnite image element: Playnite populates this internally. -->
+                        <Image x:Name="PART_ImageCover"
+                               RenderOptions.BitmapScalingMode="Fant" StretchDirection="Both"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Stretch="{Settings CoverArtStretch}" />
+                        <!-- Icon is drawn in the same slot, preserving the native layout. -->
+                        <Image x:Name="MoondancerIcon" Visibility="Collapsed"
+                               Source="{Binding Game.Icon, Converter={StaticResource ImageStringToImageConverterCached}}"
+                               RenderOptions.BitmapScalingMode="Fant"
+                               Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <!-- Game background uses Playnite's own background-image metadata. -->
+                        <Image x:Name="MoondancerBackground" Visibility="Collapsed"
+                               Source="{Binding Game.BackgroundImage, Converter={StaticResource ImageStringToImageConverterCached}}"
+                               RenderOptions.BitmapScalingMode="Fant"
+                               Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <!-- Each item computes its own EML logo path from Game.Id. -->
+                        <TextBlock x:Name="MoondancerLogoPath" Tag="{Api Paths.ConfigurationPath}" Visibility="Collapsed">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0}\ExtraMetadata\games\{1}\logo.png">
+                                    <Binding RelativeSource="{RelativeSource Self}" Path="Tag" />
+                                    <Binding Path="Game.Id" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <!-- Uniform transparent reference frame. The Viewbox scales a fixed 160x90 or 160x160
+                             design surface; logos keep their own proportions and do not determine frame size. -->
+                        <Viewbox x:Name="MoondancerLogoFrame" Visibility="Collapsed"
+                                 Stretch="Uniform" StretchDirection="Both"
+                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                 Margin="8,6,8,22">
+                            <Grid x:Name="MoondancerLogoCanvas" Width="160" Height="90" Background="Transparent">
+                                <Image x:Name="MoondancerLogo"
+                                       Source="{Binding ElementName=MoondancerLogoPath, Path=Text, Converter={StaticResource ImageStringToImageConverter}}"
+                                       Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                       RenderOptions.BitmapScalingMode="Fant" />
+                            </Grid>
+                        </Viewbox>
+                        <Border Background="#AA000000" x:Name="BorderDarken" Visibility="Collapsed" />
+                        <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis"
+                                   Visibility="{Settings Fullscreen.ShowGameTitles}"
+                                   Style="{DynamicResource TextBlockBaseStyle}" Foreground="#276C8A"
+                                   FontSize="{DynamicResource FontSizeSmall}"
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                                   TextAlignment="Center" Padding="5"
+                                   Background="White"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{PluginSettings Plugin=Moondancer, Path=Fullscreen.VisualMode}" Value="Icon">
+                            <Setter TargetName="PART_ImageCover" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="MoondancerIcon" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{PluginSettings Plugin=Moondancer, Path=Fullscreen.VisualMode}" Value="Background">
+                            <Setter TargetName="PART_ImageCover" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="MoondancerBackground" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{PluginSettings Plugin=Moondancer, Path=Fullscreen.VisualMode}" Value="Logo">
+                            <Setter TargetName="PART_ImageCover" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="MoondancerLogoFrame" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{PluginSettings Plugin=Moondancer, Path=Fullscreen.VisualMode}" Value="BackgroundLogo">
+                            <Setter TargetName="PART_ImageCover" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="MoondancerBackground" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="MoondancerLogoFrame" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{PluginSettings Plugin=Moondancer, Path=Fullscreen.LogoAspectRatio}" Value="1:1">
+                            <Setter TargetName="MoondancerLogoCanvas" Property="Height" Value="160" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

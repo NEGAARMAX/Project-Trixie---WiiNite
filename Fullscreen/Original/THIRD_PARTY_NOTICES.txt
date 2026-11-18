@@ -1,0 +1,48 @@
+Project Trixie - WiiNite | CRÉDITOS Y AVISOS DE TERCEROS
+Proyecto: Project Trixie (WiiNite), por NEGAARMAX
+Aplicable a las ediciones Original y Dark, variante BYOA 1.0.0.
+
+REFERENCIAS Y CÓDIGO
+- Duk Reskin XBOXSX Ext / Duk FST, por dukobpa3:
+  https://github.com/dukobpa3/Duk_FST_Packed_0
+- ReskinXBOXSX, por TheKersalMassive:
+  https://github.com/TheKersalMassive/ReskinXBOXSX
+Los temas anteriores sirvieron como referencia. Algunos archivos XAML de
+WiiNite mencionan adaptaciones o estructuras de Duk FST. Cuando se reutilice
+código de terceros, deben respetarse sus avisos y condiciones originales;
+la revisión de procedencia y avisos aplicables no se considera concluida.
+La mención de estos autores no implica patrocinio, participación ni aprobación.
+
+IMÁGENES CONSERVADAS EN BYOA
+- Images/WiiMenuController.png: icono del mando de Playnite, recoloreado
+  en azul para WiiNite. Playnite y su identidad gráfica pertenecen a sus
+  respectivos titulares. Deben verificarse las condiciones de reutilización
+  del logotipo por separado de las licencias del código.
+- Images/PlayniteLogo.png: composición gráfica con un mando derivado del
+  icono de Playnite, el texto estilizado «WiiNite» (con estética inspirada en
+  Wii) y la cutie mark de Trixie, personaje de My Little Pony.
+  La cutie mark es un elemento identificable de una franquicia de terceros;
+  los derechos correspondientes pertenecen a sus titulares, entre ellos
+  los que correspondan a Hasbro. Su inclusión constituye un homenaje no
+  oficial, no una afirmación de autoría exclusiva ni una autorización de uso.
+  No se afirma que la imagen compuesta esté íntegramente bajo GPL.
+
+RECURSOS NO INCLUIDOS EN BYOA
+- No se incluyen los iconos de videojuegos/plataformas recopilados de
+  ReskinXBOXSX ni los añadidos posteriormente al tema personal.
+- No se incluyen las grabaciones originales del menú de Nintendo Wii.
+  Fuentes utilizadas en la edición personal, solo como referencia histórica:
+  https://sounds.spriters-resource.com/wii/wiimenu/asset/415191/
+  https://downloads.khinsider.com/game-soundtracks/album/wii-system-menu
+- En su lugar se proporcionan archivos de audio sustitutos (6 WAV y 2 MP3).
+  Debe verificarse que estos sustitutos sean originales o redistribuibles
+  antes de una publicación pública.
+
+ALCANCE DE LA LICENCIA
+LICENSE contiene GNU GPL v3.0 para las contribuciones sobre las que el autor
+pueda conceder derechos. No altera ni reemplaza licencias, derechos de autor
+o derechos de marca de terceros. Atribuir un recurso o declarar que un tema
+es no oficial NO equivale a obtener permiso para redistribuirlo.
+
+Project Trixie - WiiNite es un proyecto independiente, no afiliado ni
+respaldado por Playnite, Nintendo, Hasbro ni los proyectos citados.

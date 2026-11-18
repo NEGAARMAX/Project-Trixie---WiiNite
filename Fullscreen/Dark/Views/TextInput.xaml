@@ -1,0 +1,105 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<!-- Beta 0.7.45 Dark: foco negro/blanco y pulsacion negro/cian. -->
+<!-- Recursos de contraste tomados como estrategia del tema Duk FST. -->
+<SolidColorBrush x:Key="TextBrush" Color="#F2F5F7"/>
+<SolidColorBrush x:Key="GlyphBrush" Color="#F2F5F7"/>
+<SolidColorBrush x:Key="ControlBackgroundBrush" Color="#303741"/>
+<SolidColorBrush x:Key="ControlBackgroundLightBrush" Color="#394B59"/>
+<SolidColorBrush x:Key="SelectionLightBrush" Color="#43BFEF"/>
+<Style x:Key="TextBlockBaseStyle" TargetType="TextBlock">
+ <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+ <Setter Property="FontSize" Value="22"/>
+</Style>
+<Style x:Key="TextInputButton" TargetType="ButtonEx" BasedOn="{StaticResource {x:Type ButtonEx}}">
+ <Setter Property="Padding" Value="10,7"/>
+ <Setter Property="Margin" Value="3"/>
+ <Setter Property="MinWidth" Value="75"/>
+ <Setter Property="MinHeight" Value="72"/>
+ <Setter Property="FontSize" Value="22"/>
+ <Setter Property="HorizontalContentAlignment" Value="Center"/>
+ <Setter Property="VerticalContentAlignment" Value="Center"/>
+ <Setter Property="Background" Value="#303741"/>
+ <Setter Property="Foreground" Value="#F2F5F7"/>
+ <Setter Property="BorderBrush" Value="#526C7D"/>
+ <Setter Property="BorderThickness" Value="1"/>
+ <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+ <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ButtonEx">
+  <ControlTemplate.Resources>
+   <SolidColorBrush x:Key="TextBrush" Color="#F2F5F7"/>
+   <SolidColorBrush x:Key="GlyphBrush" Color="#F2F5F7"/>
+   <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
+    <Setter Property="Foreground" Value="#F2F5F7"/>
+   </Style>
+  </ControlTemplate.Resources>
+  <!-- 0.7.18: hover con raton, Click para activacion con mando o raton; foco sin audio. -->
+  <Grid>
+   <MediaElement x:Name="TrixieKeyboardHoverPlayer" LoadedBehavior="Manual" UnloadedBehavior="Close" Volume="{Settings Fullscreen.InterfaceVolume}" Width="0" Height="0" IsHitTestVisible="False" Focusable="False"/>
+   <MediaElement x:Name="TrixieKeyboardPressPlayer" LoadedBehavior="Manual" UnloadedBehavior="Close" Volume="{Settings Fullscreen.InterfaceVolume}" Width="0" Height="0" IsHitTestVisible="False" Focusable="False"/>
+   <Border x:Name="KeySurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+   <!-- Referencia Duk FST: un unico ContentPresenter dentro de TextBlock heredando Foreground. -->
+   <TextBlock x:Name="KeyText" Style="{DynamicResource TextBlockBaseStyle}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}" TextAlignment="Center">
+    <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+   </TextBlock>
+   </Border>
+  </Grid>
+  <ControlTemplate.Triggers>
+   <Trigger Property="IsMouseOver" Value="True">
+    <Setter TargetName="KeySurface" Property="Background" Value="#465A69"/><Setter TargetName="KeySurface" Property="BorderBrush" Value="#36BCE8"/><Setter TargetName="KeySurface" Property="BorderThickness" Value="2"/>
+    <Trigger.EnterActions><BeginStoryboard HandoffBehavior="SnapshotAndReplace"><Storyboard><MediaTimeline Source="{ThemeFile 'audio/_keyboard-hover.wav'}" Storyboard.TargetName="TrixieKeyboardHoverPlayer"/></Storyboard></BeginStoryboard></Trigger.EnterActions>
+   </Trigger>
+   <Trigger Property="IsFocused" Value="True">
+    <Setter TargetName="KeySurface" Property="Background" Value="#110C12"/><Setter Property="Foreground" Value="#FFFFFF"/><Setter TargetName="KeyText" Property="Foreground" Value="#FFFFFF"/>
+    <Setter TargetName="KeySurface" Property="BorderBrush" Value="#FFFFFF"/>
+    <Setter TargetName="KeySurface" Property="BorderThickness" Value="3"/>
+   </Trigger>
+   <Trigger Property="IsPressed" Value="True">
+    <Setter TargetName="KeySurface" Property="Background" Value="#110C12"/><Setter Property="Foreground" Value="#43BFEF"/><Setter TargetName="KeyText" Property="Foreground" Value="#43BFEF"/><Setter TargetName="KeySurface" Property="BorderBrush" Value="#43BFEF"/>
+   </Trigger>
+   <EventTrigger RoutedEvent="ButtonBase.Click">
+    <BeginStoryboard HandoffBehavior="SnapshotAndReplace"><Storyboard><MediaTimeline Source="{ThemeFile 'audio/_keyboard-press.wav'}" Storyboard.TargetName="TrixieKeyboardPressPlayer"/></Storyboard></BeginStoryboard>
+   </EventTrigger>
+   <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.72"/></Trigger>
+  </ControlTemplate.Triggers>
+ </ControlTemplate></Setter.Value></Setter>
+</Style>
+<!-- Beta 0.4.35: exclusivamente casillas del cuadro de entrada de texto/filtros. -->
+<Style x:Key="TextInputCheckbox" TargetType="CheckBoxEx" BasedOn="{StaticResource {x:Type CheckBoxEx}}">
+ <Setter Property="Foreground" Value="#F2F5F7"/>
+ <Setter Property="Background" Value="#303741"/>
+ <Setter Property="BorderBrush" Value="#526C7D"/>
+ <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+ <Setter Property="Padding" Value="10,7"/>
+ <Setter Property="MinHeight" Value="46"/>
+ <Setter Property="Template"><Setter.Value>
+  <ControlTemplate TargetType="CheckBoxEx">
+   <Border x:Name="OptionSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="4" Padding="{TemplateBinding Padding}">
+    <Grid>
+     <Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+     <Border x:Name="CheckSquare" Grid.Column="0" Width="20" Height="20" CornerRadius="2" BorderBrush="#36BCE8" BorderThickness="2" Background="#20252B" VerticalAlignment="Center" HorizontalAlignment="Left">
+      <Path x:Name="CheckMark" Data="M 3,9 L 8,14 L 17,4" Stroke="#FFFFFF" StrokeThickness="2.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Visibility="Collapsed"/>
+     </Border>
+     <ContentPresenter Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True"/>
+    </Grid>
+   </Border>
+   <ControlTemplate.Triggers>
+    <Trigger Property="IsChecked" Value="True"><Setter TargetName="CheckSquare" Property="Background" Value="#36BCE8"/><Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/></Trigger>
+    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="OptionSurface" Property="Background" Value="#465A69"/><Setter TargetName="OptionSurface" Property="BorderBrush" Value="#36BCE8"/></Trigger>
+    <Trigger Property="IsFocused" Value="True"><Setter TargetName="OptionSurface" Property="Background" Value="#394B59"/><Setter TargetName="OptionSurface" Property="BorderBrush" Value="#36BCE8"/><Setter TargetName="OptionSurface" Property="BorderThickness" Value="3"/></Trigger>
+    <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.5"/></Trigger>
+   </ControlTemplate.Triggers>
+  </ControlTemplate>
+ </Setter.Value></Setter>
+</Style>
+<Style x:Key="TextInputTextbox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+ <Setter Property="Height" Value="64"/><Setter Property="FontSize" Value="32"/><Setter Property="Padding" Value="16,8"/>
+ <Setter Property="Background" Value="#20252B"/><Setter Property="Foreground" Value="#F2F5F7"/><Setter Property="CaretBrush" Value="#249FC6"/><Setter Property="SelectionBrush" Value="#B5DDEA"/><Setter Property="BorderBrush" Value="#36BCE8"/><Setter Property="BorderThickness" Value="2"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+ <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TextBox">
+  <Border x:Name="SearchBar" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+   <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" Focusable="False"/>
+  </Border>
+  <ControlTemplate.Triggers><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="SearchBar" Property="BorderBrush" Value="#36BCE8"/></Trigger></ControlTemplate.Triggers>
+ </ControlTemplate></Setter.Value></Setter>
+</Style>
+<Style x:Key="TextInputOptionsBorder" TargetType="Border"><Setter Property="Margin" Value="8,12,8,6"/><Setter Property="Padding" Value="8"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="#526C7D"/></Style>
+<Style x:Key="TextInputKeysBorder" TargetType="Border"><Setter Property="Margin" Value="8,8,8,0"/><Setter Property="Padding" Value="8"/><Setter Property="Background" Value="#20252B"/><Setter Property="BorderBrush" Value="#526C7D"/><Setter Property="BorderThickness" Value="1"/></Style>
+</ResourceDictionary>

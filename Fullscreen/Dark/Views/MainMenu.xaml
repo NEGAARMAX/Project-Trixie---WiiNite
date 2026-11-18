@@ -1,0 +1,47 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <!-- Cabecera nativa: reemplaza el logotipo sin modificar los comandos del menú. -->
+ <DataTemplate x:Key="MainMenuHeaderTemplate">
+  <Grid Width="328" Height="110" Margin="8,12,8,8">
+   <Image Source="{ThemeFile 'Images/PlayniteLogo.png'}" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+  </Grid>
+ </DataTemplate>
+ <Style x:Key="MainMenuBorder" TargetType="Border">
+  <!-- Creditos decorativos en el fondo del panel: no alteran los comandos ni los elementos del menu. -->
+  <Setter Property="Background">
+   <Setter.Value>
+    <VisualBrush Stretch="Fill" AlignmentX="Center" AlignmentY="Center">
+     <VisualBrush.Visual>
+      <Grid Width="400" Height="928" Background="#20252B">
+       <TextBlock Text="Project Trixie (WiiNite) by NEGAARMAX" FontSize="14" Foreground="#B8C4CC" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,24" TextAlignment="Center" IsHitTestVisible="False"/>
+      </Grid>
+     </VisualBrush.Visual>
+    </VisualBrush>
+   </Setter.Value>
+  </Setter>
+  <Setter Property="BorderBrush" Value="#43BFEF"/>
+  <Setter Property="BorderThickness" Value="2,0,0,0"/>
+  <Setter Property="Width" Value="400"/>
+ </Style>
+ <Style x:Key="MainMenuButton" TargetType="ButtonEx">
+  <Setter Property="Foreground" Value="#E3EEF5"/>
+  <Setter Property="FontSize" Value="20"/>
+  <Setter Property="FontWeight" Value="Medium"/>
+  <Setter Property="Background" Value="Transparent"/>
+  <Setter Property="BorderThickness" Value="0"/>
+  <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+  <Setter Property="Margin" Value="8,3"/>
+  <Setter Property="Padding" Value="14,10"/>
+  <Setter Property="HorizontalContentAlignment" Value="Left"/>
+  <Setter Property="Template"><Setter.Value>
+   <ControlTemplate TargetType="ButtonEx">
+    <Border x:Name="Surface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+     <ContentPresenter ContentSource="Content" TextElement.FontSize="20" TextElement.FontWeight="Medium" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+    </Border>
+    <ControlTemplate.Triggers>
+     <Trigger Property="IsFocused" Value="True"><Setter TargetName="Surface" Property="Background" Value="#394B59"/><Setter TargetName="Surface" Property="BorderBrush" Value="#35B7E9"/><Setter TargetName="Surface" Property="BorderThickness" Value="2"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Background" Value="#394B59"/><Setter TargetName="Surface" Property="BorderBrush" Value="#35B7E9"/><Setter TargetName="Surface" Property="BorderThickness" Value="2"/></Trigger>
+    </ControlTemplate.Triggers>
+   </ControlTemplate>
+  </Setter.Value></Setter>
+ </Style>
+</ResourceDictionary>
