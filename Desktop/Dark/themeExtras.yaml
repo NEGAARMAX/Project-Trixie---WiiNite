@@ -1,0 +1,9 @@
+ThemeId: ProjectTrixieDesktopDark_06c6b794-2a13-4c3d-bd9d-4700d80f4c6d
+PersistentPaths:
+- Images/Banners
+- Images/Icons
+BannersBySpecIdPath: Images/Banners/PlatformSpecId
+BannersByPlatformNamePath: Images/Banners/PlatformName
+BannersByPluginIdPath: Images/Banners/PluginId
+DefaultBannerPath: Images/Banners/UnknownLibrary.png
+BannerDecodeHeight: 75
