@@ -143,6 +143,14 @@ Please see `THIRD-PARTY-NOTICES.md` and the included license files for detailed 
 
 Project Trixie — WiiNite is an **unofficial fan project**, not affiliated with, sponsored by, or endorsed by Playnite, Nintendo, Hasbro, or the creators of the referenced themes. Playnite branding, Wii-inspired visual elements, and the Trixie cutie mark remain subject to their respective owners' rights. BYOA does not grant permission to obtain or redistribute copyrighted assets.
 
+## 🎬 Video Showcase
+
+Take a look at Project Trixie — WiiNite in action!
+
+[![Project Trixie — WiiNite Showcase](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=zDSUBqLgC10)
+
+*Experience the magic of the Great and Powerful Trixie!*
+
 ## A little message from The Great and Powerful Trixie! 🎩✨
 
 > *The Great and Powerful Trixie went through over 300 beta versions to bring you this magnificent theme! A little thank you would be appreciated.*
